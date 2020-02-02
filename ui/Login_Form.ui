@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>277</width>
-    <height>114</height>
+    <height>158</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -37,7 +37,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="lineEdit_2"/>
+    <widget class="QLineEdit" name="line_id"/>
    </item>
    <item>
     <widget class="QLabel" name="label_2">
@@ -47,7 +47,11 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="lineEdit"/>
+    <widget class="QLineEdit" name="line_pw">
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QPushButton" name="login_btn">
