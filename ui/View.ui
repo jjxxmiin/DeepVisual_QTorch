@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1077</width>
-    <height>695</height>
+    <width>1076</width>
+    <height>576</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,19 +19,19 @@
      <x>880</x>
      <y>10</y>
      <width>191</width>
-     <height>131</height>
+     <height>491</height>
     </rect>
    </property>
    <property name="title">
     <string>Layers</string>
    </property>
-   <widget class="QScrollArea" name="scrollArea">
+   <widget class="QScrollArea" name="layer_area">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>20</y>
       <width>171</width>
-      <height>101</height>
+      <height>461</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -43,58 +43,19 @@
        <x>0</x>
        <y>0</y>
        <width>169</width>
-       <height>99</height>
+       <height>459</height>
       </rect>
      </property>
     </widget>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_2">
-   <property name="geometry">
-    <rect>
-     <x>590</x>
-     <y>20</y>
-     <width>281</width>
-     <height>121</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>261</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>20</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="groupBox_3">
+  <widget class="QGroupBox" name="input">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>171</width>
-     <height>131</height>
+     <width>281</width>
+     <height>221</height>
     </rect>
    </property>
    <property name="title">
@@ -105,15 +66,15 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>151</width>
-      <height>101</height>
+      <width>261</width>
+      <height>191</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="input">
+      <widget class="QLabel" name="input_img">
        <property name="text">
-        <string>Empty</string>
+        <string/>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -133,81 +94,27 @@
   <widget class="QGroupBox" name="groupBox_4">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>10</y>
-     <width>391</width>
+     <x>10</x>
+     <y>240</y>
+     <width>281</width>
      <height>131</height>
     </rect>
    </property>
    <property name="title">
     <string>Model</string>
    </property>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>20</y>
-      <width>371</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="model_check">
-       <property name="text">
-        <string>Empty</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="model_btn">
-       <property name="text">
-        <string>Model Upload</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>70</y>
-      <width>371</width>
-      <height>51</height>
+      <x>10</x>
+      <y>20</y>
+      <width>261</width>
+      <height>101</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Class Number</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Visualization</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="comboBox">
-       <item>
-        <property name="text">
-         <string>modeling</string>
-        </property>
-       </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="mode_box">
        <item>
         <property name="text">
          <string>cam</string>
@@ -235,22 +142,128 @@
        </item>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBox"/>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="cls_box">
+       <property name="minimum">
+        <number>-1</number>
+       </property>
+       <property name="maximum">
+        <number>999</number>
+       </property>
+       <property name="value">
+        <number>-1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="mode_label">
+       <property name="text">
+        <string>Mode</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="cls_label">
+       <property name="text">
+        <string>Class Number</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="model_label">
+       <property name="text">
+        <string>Model</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="model_box">
+       <item>
+        <property name="text">
+         <string>resnet18</string>
+        </property>
+       </item>
+      </widget>
      </item>
     </layout>
    </widget>
   </widget>
-  <widget class="QWidget" name="gridLayoutWidget_2">
+  <widget class="QPushButton" name="start_btn">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>150</y>
-     <width>1061</width>
-     <height>541</height>
+     <y>380</y>
+     <width>281</width>
+     <height>41</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout_2"/>
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>10</y>
+     <width>571</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>SHOW</string>
+   </property>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>19</y>
+      <width>551</width>
+      <height>461</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QLabel" name="main_label">
+       <property name="text">
+        <string>이미지를 업로드하세요</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>510</y>
+     <width>571</width>
+     <height>61</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="plainTextEdit">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>430</y>
+     <width>281</width>
+     <height>141</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>
