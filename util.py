@@ -16,6 +16,8 @@ def save_url_img(url, save_path):
 def get_model(model_name):
     if model_name == 'resnet18':
         model = models.resnet18(pretrained=True)
+    elif model_name == 'vgg16':
+        model = models.vgg16(pretrained=True)
     else:
         AssertionError("[ERROR] This model is not supported")
 

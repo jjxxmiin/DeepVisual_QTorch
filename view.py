@@ -1,11 +1,10 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from vis.cam import CAM
+from vis.grad_cam import GradCAM
 import logging
-from util import isEmpty
 
 
 class QTextEditLogger(logging.Handler):
@@ -63,6 +62,7 @@ class Visualization_Form(QDialog, QPlainTextEdit):
             QMessageBox.information(self, '메세지', "이미지를 업로드 하세요", QMessageBox.Yes)
             return
 
+        vis = None
         mode = self.mode_box.currentText()
         model_name = self.model_box.currentText()
         cls = self.cls_box.value()
@@ -70,13 +70,18 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         logging.info("\nMode : %s, Model : %s" % (mode, model_name))
 
         if mode == 'cam':
-            cam = CAM(self.img_path,
+            vis = CAM(self.img_path,
                       self.label_path,
                       model_name=model_name)
 
-            img, info = cam.get_img(cls)
+        elif mode == 'grad cam':
+            vis = GradCAM(self.img_path,
+                          self.label_path,
+                          model_name=model_name)
 
-            logging.info(info)
+        img, info = vis.get_img(cls)
+        print(vis.layer_names)
+        logging.info(info)
 
         h, w, c = img.shape
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
