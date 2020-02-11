@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from vis.cam import CAM
 import logging
@@ -8,9 +9,9 @@ from util import isEmpty
 
 
 class QTextEditLogger(logging.Handler):
-    def __init__(self, plain_text):
+    def __init__(self, parent):
         super().__init__()
-        self.widget = plain_text
+        self.widget = parent
         self.widget.setReadOnly(True)
 
     def emit(self, record):
@@ -25,6 +26,7 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         self.label_path = "./labels/imagenet_labels.pkl"
         self.ui = uic.loadUi("./ui/View.ui", self)
         self.initUI()
+        self.isInput = False
 
     def initUI(self):
         self.ui.setWindowTitle('Visualization')
@@ -41,14 +43,23 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         self.start_btn.clicked.connect(self.start)
 
     def get_input_image(self):
-        self.img_path = QFileDialog.getOpenFileName()[0]
-        self.input_img.setPixmap(QPixmap(self.img_path).scaledToWidth(self.input.width()))
-        # TODO
-        self.main_label.setText("시작 버튼을 누르세요")
-        logging.info("Input Image")
+        self.img_path, i = QFileDialog.getOpenFileName(self, 'Open file', '.', "Image files (*.jpg *.gif *.png)")
+
+        if not self.img_path:
+            logging.info("\nNot Selected Image")
+            self.isInput = False
+
+            self.input_img.setPixmap(QPixmap(None))
+
+        else:
+            logging.info("\nInput Image")
+            self.main_label.setText("시작 버튼을 누르세요")
+            self.isInput = True
+
+            self.input_img.setPixmap(QPixmap(self.img_path).scaledToWidth(self.input.width()))
         
     def start(self):
-        if isEmpty(self.input_img.text()):
+        if self.isInput is False:
             QMessageBox.information(self, '메세지', "이미지를 업로드 하세요", QMessageBox.Yes)
             return
 
