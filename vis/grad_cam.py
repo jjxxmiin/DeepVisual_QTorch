@@ -21,8 +21,11 @@ class GradCAM(object):
         self.features = []
         self.layer_names = []
 
-    def get_feature_hook(self, module, input, output):
-        self.features.append(output)
+    def get_feature_hook(self, name):
+        def hook(module, input, output):
+            self.layer_names.append(name)
+            self.features.append(output)
+        return hook
 
     def get_gradient_hook(self, module, grad_in, grad_out):
         self.grads.append(grad_out[0])
@@ -30,11 +33,10 @@ class GradCAM(object):
     def register(self):
         for module, (name, _) in zip(self.model.modules(), self.model.named_modules()):
             if type(module) == nn.Conv2d or type(module) == nn.BatchNorm2d or type(module) == nn.ReLU:
-                module.register_forward_hook(self.get_feature_hook)
+                module.register_forward_hook(self.get_feature_hook(name))
                 module.register_backward_hook(self.get_gradient_hook)
-                self.layer_names.append(name)
 
-    def get_img(self, cls=-1):
+    def save_img(self, cls=-1):
         # get tensor image
         img = Image.open(self.img_path)
         cvt_tensor = transforms.Compose([transforms.Resize((224, 224)),
@@ -59,22 +61,22 @@ class GradCAM(object):
         # get grad cam
         sel = cls if cls != -1 else pred
 
-        grad = self.grads[0][0].mean(dim=-1, keepdim=True).mean(dim=-2, keepdim=True)
-        feature = self.features[-1][0]
+        self.grads = self.grads[::-1]
 
-        grad_cam = F.relu((grad * feature).sum(dim=0)).squeeze(0)
-        scaled_grad_cam = scaling(grad_cam.detach().cpu().numpy())
+        for idx, name in enumerate(self.layer_names):
+            grad = self.grads[idx][0].mean(dim=-1, keepdim=True).mean(dim=-2, keepdim=True)
+            feature = self.features[idx][0]
 
-        resized_grad_cam = cv2.resize(scaled_grad_cam, (448, 448))
-        heatmap = cv2.applyColorMap(np.uint8(255 * resized_grad_cam), cv2.COLORMAP_JET)
+            grad_cam = F.relu((grad * feature).sum(dim=0)).squeeze(0)
+            scaled_grad_cam = scaling(grad_cam.detach().cpu().numpy())
 
-        img = cv2.imread(self.img_path)
-        img = cv2.resize(img, (448, 448))
-        heatimg = heatmap * 0.4 + img * 0.5
-        cv2.imwrite('./grad_cam.jpg', heatimg)
+            resized_grad_cam = cv2.resize(scaled_grad_cam, (448, 448))
+            heatmap = cv2.applyColorMap(np.uint8(255 * resized_grad_cam), cv2.COLORMAP_JET)
 
-        grad_cam_img = cv2.imread('./grad_cam.jpg')
-        grad_cam_img = cv2.cvtColor(grad_cam_img, cv2.COLOR_BGR2RGB)
+            img = cv2.imread(self.img_path)
+            img = cv2.resize(img, (448, 448))
+            heatimg = heatmap * 0.4 + img * 0.5
+            cv2.imwrite('../results/grad_cam/%d_%s.jpg' % (idx,name), heatimg)
 
         label_info = "\nSELECT CLASS NUMBER  : %d " \
                      "\nSELECT CLASS NAME    : %s " \
@@ -82,7 +84,14 @@ class GradCAM(object):
                      "\nPREDICT CLASS NAME   : %s" \
                      % (sel, self.label[sel], pred, self.label[pred])
 
-        return grad_cam_img, label_info
+        return label_info
+
+    @staticmethod
+    def load_img(layer):
+        grad_cam_img = cv2.imread('./results/grad_cam/%s.jpg' % layer)
+        grad_cam_img = cv2.cvtColor(grad_cam_img, cv2.COLOR_BGR2RGB)
+
+        return grad_cam_img
 
 
 if __name__ == "__main__":
@@ -90,5 +99,5 @@ if __name__ == "__main__":
                        label_path="../labels/imagenet_labels.pkl",
                        model_name="resnet18")
 
-    _, info = grad_cam.get_img()
+    info = grad_cam.save_img()
     print(info)

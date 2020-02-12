@@ -19,34 +19,21 @@
      <x>880</x>
      <y>10</y>
      <width>191</width>
-     <height>491</height>
+     <height>531</height>
     </rect>
    </property>
    <property name="title">
     <string>Layers</string>
    </property>
-   <widget class="QScrollArea" name="layer_area">
+   <widget class="QListWidget" name="layers_widget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>171</width>
-      <height>461</height>
+      <height>491</height>
      </rect>
     </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>169</width>
-       <height>459</height>
-      </rect>
-     </property>
-    </widget>
    </widget>
   </widget>
   <widget class="QGroupBox" name="input">
@@ -65,9 +52,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>261</width>
-      <height>191</height>
+      <height>181</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -107,9 +94,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>261</width>
-      <height>101</height>
+      <height>91</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -216,44 +203,28 @@
      <x>300</x>
      <y>10</y>
      <width>571</width>
-     <height>491</height>
+     <height>531</height>
     </rect>
    </property>
    <property name="title">
     <string>SHOW</string>
    </property>
-   <widget class="QWidget" name="gridLayoutWidget_2">
+   <widget class="QLabel" name="main_label">
     <property name="geometry">
      <rect>
-      <x>9</x>
-      <y>19</y>
+      <x>10</x>
+      <y>30</y>
       <width>551</width>
-      <height>461</height>
+      <height>491</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <widget class="QLabel" name="main_label">
-       <property name="text">
-        <string>이미지를 업로드하세요</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="text">
+     <string>이미지를 업로드하세요</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
-  </widget>
-  <widget class="QTextEdit" name="textEdit">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>510</y>
-     <width>571</width>
-     <height>61</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QPlainTextEdit" name="plainTextEdit">
    <property name="geometry">
@@ -263,6 +234,27 @@
      <width>281</width>
      <height>141</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>551</y>
+     <width>191</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Calibri</family>
+     <pointsize>9</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>GitHub : https://github.com/jjeamin</string>
    </property>
   </widget>
  </widget>

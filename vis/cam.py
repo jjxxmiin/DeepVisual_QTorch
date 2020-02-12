@@ -25,7 +25,7 @@ class CAM(object):
         self.layer_names.append(layer_name)
         self.model._modules.get(layer_name).register_forward_hook(self.get_feature_hook)
 
-    def get_img(self, cls=-1):
+    def save_img(self, cls=-1):
         # register hook
         self.register(layer_name='layer4')
 
@@ -61,10 +61,7 @@ class CAM(object):
         img = cv2.imread(self.img_path)
         img = cv2.resize(img, (448, 448))
         heatimg = heatmap * 0.4 + img * 0.5
-        cv2.imwrite('./cam.jpg', heatimg)
-
-        cam_img = cv2.imread('./cam.jpg')
-        cam_img = cv2.cvtColor(cam_img, cv2.COLOR_BGR2RGB)
+        cv2.imwrite('./results/cam/cam.jpg', heatimg)
 
         label_info = "\nSELECT CLASS NUMBER  : %d " \
                      "\nSELECT CLASS NAME    : %s " \
@@ -72,4 +69,11 @@ class CAM(object):
                      "\nPREDICT CLASS NAME   : %s"\
                      % (sel, self.label[sel], pred, self.label[pred])
 
-        return cam_img, label_info
+        return label_info
+
+    @staticmethod
+    def load_img(layer=None):
+        cam_img = cv2.imread('./results/cam/cam.jpg')
+        cam_img = cv2.cvtColor(cam_img, cv2.COLOR_BGR2RGB)
+
+        return cam_img

@@ -1,10 +1,12 @@
 import sys
+import logging
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 from PyQt5 import uic
 from vis.cam import CAM
 from vis.grad_cam import GradCAM
-import logging
+from util import use_theme
 
 
 class QTextEditLogger(logging.Handler):
@@ -26,6 +28,7 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         self.ui = uic.loadUi("./ui/View.ui", self)
         self.initUI()
         self.isInput = False
+        self.vis = None
 
     def initUI(self):
         self.ui.setWindowTitle('Visualization')
@@ -61,8 +64,8 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         if self.isInput is False:
             QMessageBox.information(self, '메세지', "이미지를 업로드 하세요", QMessageBox.Yes)
             return
+        self.layers_widget.clear()
 
-        vis = None
         mode = self.mode_box.currentText()
         model_name = self.model_box.currentText()
         cls = self.cls_box.value()
@@ -70,19 +73,49 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         logging.info("\nMode : %s, Model : %s" % (mode, model_name))
 
         if mode == 'cam':
-            vis = CAM(self.img_path,
-                      self.label_path,
-                      model_name=model_name)
+            self.vis = CAM(self.img_path,
+                           self.label_path,
+                           model_name=model_name)
+            info = self.vis.save_img(cls)
+            img = self.vis.load_img()
+
+            self.drawing(img)
 
         elif mode == 'grad cam':
-            vis = GradCAM(self.img_path,
-                          self.label_path,
-                          model_name=model_name)
+            self.main_label.setText("레이어를 선택하세요")
 
-        img, info = vis.get_img(cls)
-        print(vis.layer_names)
+            self.vis = GradCAM(self.img_path,
+                               self.label_path,
+                               model_name=model_name)
+            info = self.vis.save_img(cls)
+
+            # set list view
+            self.set_layers(self.vis.layer_names)
+        else:
+            info = None
+
         logging.info(info)
 
+    def set_layers(self, layer_names):
+        for name in layer_names:
+            item = QListWidgetItem(name, self.layers_widget)
+            custom_widget = QLabel(name)
+            item.setSizeHint(custom_widget.sizeHint())
+            self.layers_widget.setItemWidget(item, custom_widget)
+            self.layers_widget.addItem(item)
+
+        self.layers_widget.itemSelectionChanged.connect(self.layer_click)
+
+    def layer_click(self):
+        num_row = self.layers_widget.currentRow()
+        layer_name = self.layers_widget.currentItem().text()
+
+        # set image
+        img = self.vis.load_img("%d_%s" % (num_row, layer_name))
+
+        self.drawing(img)
+
+    def drawing(self, img):
         h, w, c = img.shape
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
         pixmap = QPixmap.fromImage(qImg)
@@ -92,5 +125,8 @@ class Visualization_Form(QDialog, QPlainTextEdit):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
+    use_theme(app, "theme/darkgray.qss")
+
     w = Visualization_Form()
     sys.exit(app.exec())

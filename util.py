@@ -2,7 +2,7 @@ import requests
 import numpy as np
 import pickle
 import torchvision.models as models
-
+from PyQt5.QtCore import QFile, QTextStream
 
 def isEmpty(value):
     return True if value is "" else False
@@ -36,3 +36,10 @@ def scaling(img):
     img = img / np.max(img)
 
     return img
+
+
+def use_theme(app, path):
+    file = QFile(path)
+    file.open(QFile.ReadOnly | QFile.Text)
+    stream = QTextStream(file)
+    app.setStyleSheet(stream.readAll())
