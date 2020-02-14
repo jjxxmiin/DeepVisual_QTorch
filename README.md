@@ -22,6 +22,10 @@ pip install PyQt5
 
 ## How to use
 
+```shell script
+python view.py
+```
+
 1. Upload Image
 2. Select Model
 3. Select Mode
