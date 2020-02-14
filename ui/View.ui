@@ -114,17 +114,17 @@
        </item>
        <item>
         <property name="text">
-         <string>guided gradient</string>
+         <string>guided grad</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>smooth gradient</string>
+         <string>vanilla grad</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>vanilla gradient</string>
+         <string>smooth grad</string>
         </property>
        </item>
       </widget>

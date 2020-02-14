@@ -2,11 +2,10 @@ import sys
 import logging
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5.QtCore import *
 from PyQt5 import uic
-from vis.cam import CAM
-from vis.grad_cam import GradCAM
-from util import use_theme
+from vis.cam import CAM, GradCAM
+from vis.grad import Vanilla, Smooth, Guided_Grad
+from util import use_theme, make_dir
 
 
 class QTextEditLogger(logging.Handler):
@@ -29,10 +28,13 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         self.initUI()
         self.isInput = False
         self.vis = None
+        self.islayer = False
 
     def initUI(self):
         self.ui.setWindowTitle('Visualization')
         self.ui.show()
+
+        make_dir("./results")
 
         logTextBox = QTextEditLogger(self.plainTextEdit)
         # You can format what is printed to text box
@@ -64,6 +66,11 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         if self.isInput is False:
             QMessageBox.information(self, '메세지', "이미지를 업로드 하세요", QMessageBox.Yes)
             return
+
+        if self.islayer is True:
+            self.layers_widget.itemSelectionChanged.disconnect()
+            self.islayer = False
+
         self.layers_widget.clear()
 
         mode = self.mode_box.currentText()
@@ -73,47 +80,78 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         logging.info("\nMode : %s, Model : %s" % (mode, model_name))
 
         if mode == 'cam':
-            self.vis = CAM(self.img_path,
-                           self.label_path,
-                           model_name=model_name)
-            info = self.vis.save_img(cls)
-            img = self.vis.load_img()
+            cam = CAM(self.img_path,
+                      self.label_path,
+                      model_name=model_name)
+            info = cam.save_img(cls)
+            img = cam.load_img()
 
             self.drawing(img)
 
         elif mode == 'grad cam':
             self.main_label.setText("레이어를 선택하세요")
 
-            self.vis = GradCAM(self.img_path,
+            grad_cam = GradCAM(self.img_path,
                                self.label_path,
                                model_name=model_name)
-            info = self.vis.save_img(cls)
+            info = grad_cam.save_img(cls)
 
             # set list view
-            self.set_layers(self.vis.layer_names)
+            self.set_layers(grad_cam)
+
+        elif mode == 'guided grad':
+            self.main_label.setText("레이어를 선택하세요")
+
+            guided_grad = Guided_Grad(self.img_path,
+                                      self.label_path,
+                                      model_name=model_name)
+            info = guided_grad.save_img(cls)
+
+            # set list view
+            self.set_layers(guided_grad)
+
+        elif mode == 'vanilla grad':
+            vanilla = Vanilla(self.img_path,
+                              self.label_path,
+                              model_name=model_name)
+            info = vanilla.save_img(cls)
+            img = vanilla.load_img()
+
+            self.drawing(img)
+
+        elif mode == 'smooth grad':
+            smooth = Smooth(self.img_path,
+                            self.label_path,
+                            model_name=model_name)
+            info = smooth.save_img(cls)
+            img = smooth.load_img()
+
+            self.drawing(img)
+
         else:
             info = None
 
         logging.info(info)
 
-    def set_layers(self, layer_names):
-        for name in layer_names:
+    def set_layers(self, vis):
+        for name in vis.items:
             item = QListWidgetItem(name, self.layers_widget)
             custom_widget = QLabel(name)
             item.setSizeHint(custom_widget.sizeHint())
             self.layers_widget.setItemWidget(item, custom_widget)
             self.layers_widget.addItem(item)
 
-        self.layers_widget.itemSelectionChanged.connect(self.layer_click)
+        self.layers_widget.itemSelectionChanged.connect(self.item_clicked(vis))
+        self.islayer = True
 
-    def layer_click(self):
-        num_row = self.layers_widget.currentRow()
-        layer_name = self.layers_widget.currentItem().text()
+    def item_clicked(self, vis):
+        def call_draw():
+            item_name = self.layers_widget.currentItem().text()
+            # set image
+            img = vis.load_img(item_name)
+            self.drawing(img)
 
-        # set image
-        img = self.vis.load_img("%d_%s" % (num_row, layer_name))
-
-        self.drawing(img)
+        return call_draw
 
     def drawing(self, img):
         h, w, c = img.shape
