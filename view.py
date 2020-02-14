@@ -57,14 +57,14 @@ class Visualization_Form(QDialog, QPlainTextEdit):
 
         else:
             logging.info("\nInput Image")
-            self.main_label.setText("시작 버튼을 누르세요")
+            self.main_label.setText("Press the start button")
             self.isInput = True
 
             self.input_img.setPixmap(QPixmap(self.img_path).scaledToWidth(self.input.width()))
         
     def start(self):
         if self.isInput is False:
-            QMessageBox.information(self, '메세지', "이미지를 업로드 하세요", QMessageBox.Yes)
+            QMessageBox.information(self, 'Message', "Upload the Image", QMessageBox.Yes)
             return
 
         if self.islayer is True:
@@ -89,7 +89,8 @@ class Visualization_Form(QDialog, QPlainTextEdit):
             self.drawing(img)
 
         elif mode == 'grad cam':
-            self.main_label.setText("레이어를 선택하세요")
+            self.groupBox.setTitle("Layers")
+            self.main_label.setText("Select layer")
 
             grad_cam = GradCAM(self.img_path,
                                self.label_path,
@@ -100,7 +101,8 @@ class Visualization_Form(QDialog, QPlainTextEdit):
             self.set_layers(grad_cam)
 
         elif mode == 'guided grad':
-            self.main_label.setText("레이어를 선택하세요")
+            self.groupBox.setTitle("Modes")
+            self.main_label.setText("Select mode")
 
             guided_grad = Guided_Grad(self.img_path,
                                       self.label_path,

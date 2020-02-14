@@ -147,7 +147,7 @@ class GradCAM(object):
             img = cv2.imread(self.img_path)
             img = cv2.resize(img, (448, 448))
             heatimg = heatmap * 0.4 + img * 0.5
-            cv2.imwrite(os.path.join(self.save_dir, '%d_%s.jpg' % (idx,name)), heatimg)
+            cv2.imwrite(os.path.join(self.save_dir, '%s.jpg' % (name)), heatimg)
 
         label_info = "\nSELECT CLASS NUMBER  : %d " \
                      "\nSELECT CLASS NAME    : %s " \
