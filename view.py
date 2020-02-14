@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
 from vis.cam import CAM, GradCAM
-from vis.grad import Vanilla, Smooth, Guided_Grad
+from vis.grad import Vanilla, Smooth, Guided_Backprop
 from util import use_theme, make_dir
 
 
@@ -100,17 +100,17 @@ class Visualization_Form(QDialog, QPlainTextEdit):
             # set list view
             self.set_layers(grad_cam)
 
-        elif mode == 'guided grad':
+        elif mode == 'guided backprop':
             self.groupBox.setTitle("Modes")
             self.main_label.setText("Select mode")
 
-            guided_grad = Guided_Grad(self.img_path,
-                                      self.label_path,
-                                      model_name=model_name)
-            info = guided_grad.save_img(cls)
+            guided = Guided_Backprop(self.img_path,
+                                     self.label_path,
+                                     model_name=model_name)
+            info = guided.save_img(cls)
 
             # set list view
-            self.set_layers(guided_grad)
+            self.set_layers(guided)
 
         elif mode == 'vanilla grad':
             vanilla = Vanilla(self.img_path,
@@ -147,13 +147,13 @@ class Visualization_Form(QDialog, QPlainTextEdit):
         self.islayer = True
 
     def item_clicked(self, vis):
-        def call_draw():
+        def clicked_drawing():
             item_name = self.layers_widget.currentItem().text()
             # set image
             img = vis.load_img(item_name)
             self.drawing(img)
 
-        return call_draw
+        return clicked_drawing
 
     def drawing(self, img):
         h, w, c = img.shape

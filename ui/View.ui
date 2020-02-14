@@ -114,7 +114,7 @@
        </item>
        <item>
         <property name="text">
-         <string>guided grad</string>
+         <string>guided backprop</string>
         </property>
        </item>
        <item>

@@ -163,13 +163,13 @@ class Smooth(object):
         return smooth_img
 
 
-class Guided_Grad(object):
+class Guided_Backprop(object):
     def __init__(self,
                  img_path,
                  label_path,
                  model_name,):
         self.img_path = img_path
-        self.save_dir = "./results/guided_grad"
+        self.save_dir = "./results/guided_backprop"
         self.label = get_label(label_path)
         self.model = get_model(model_name)
         self.model.eval()
@@ -234,7 +234,7 @@ class Guided_Grad(object):
 
         # get gray img
         gray_img = get_gray_img(grad.copy())
-        gray_img = scaling(np.repeat(gray_img, 3, axis=0)).transpose(1, 2, 0) # channel 1 -> 3
+        gray_img = scaling(np.repeat(gray_img, 3, axis=0)).transpose(1, 2, 0)# channel 1 -> 3
         gray_img = (gray_img * 255.0).astype('uint8')
 
         # get pos grad
@@ -273,8 +273,8 @@ class Guided_Grad(object):
 
 if __name__ == "__main__":
     gg = Smooth(img_path="../test.png",
-                        label_path="../labels/imagenet_labels.pkl",
-                        model_name="resnet18")
+                label_path="../labels/imagenet_labels.pkl",
+                model_name="resnet18")
 
     info = gg.save_img()
     print(info)
