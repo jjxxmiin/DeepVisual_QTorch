@@ -61,7 +61,7 @@ class Visualization_Form(QDialog, QPlainTextEdit):
             self.isInput = True
 
             self.input_img.setPixmap(QPixmap(self.img_path).scaledToWidth(self.input.width()))
-        
+
     def start(self):
         if self.isInput is False:
             QMessageBox.information(self, 'Message', "Upload the Image", QMessageBox.Yes)
@@ -125,7 +125,9 @@ class Visualization_Form(QDialog, QPlainTextEdit):
             smooth = Smooth(self.img_path,
                             self.label_path,
                             model_name=model_name)
-            info = smooth.save_img(cls)
+
+            info = smooth.save_img(prog=self.progressBar,
+                                   cls=cls)
             img = smooth.load_img()
 
             self.drawing(img)
@@ -134,6 +136,9 @@ class Visualization_Form(QDialog, QPlainTextEdit):
             info = None
 
         logging.info(info)
+
+        if self.progressBar == self.progressBar.maximum():
+            self.progressBar.setValue(0)
 
     def set_layers(self, vis):
         for name in vis.items:

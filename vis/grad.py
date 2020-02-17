@@ -93,7 +93,7 @@ class Smooth(object):
         self.first_layer = list(self.model._modules.items())[0][1]
         self.first_layer.register_backward_hook(self.get_grad_hook)
 
-    def save_img(self, cls=-1):
+    def save_img(self, prog, cls=-1):
         make_dir(self.save_dir)
 
         # register hook
@@ -122,6 +122,8 @@ class Smooth(object):
         sigma = param_sigma_multiplier / (torch.max(tensor_img) - torch.min(tensor_img)).item()
 
         for x in range(param_n):
+            # progressBar
+            prog.setValue(100 / 50 * (x + 1))
             # Generate noise
             noise = Variable(tensor_img.data.new(tensor_img.size()).normal_(mean, sigma ** 2))
             # Add noise to the image
