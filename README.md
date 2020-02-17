@@ -50,7 +50,7 @@ python view.py
 
 ## TODO
 
-- [o] Smooth Grad Update(progress Bar)
+- [x] Smooth Grad Update(progress Bar)
 - [ ] Class Number View Update
 - [ ] ADD Support Model
 - [ ] ADD Support Visualization
