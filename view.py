@@ -19,7 +19,7 @@ class QTextEditLogger(logging.Handler):
         self.widget.appendPlainText(msg)
 
 
-class Visualization_Form(QDialog, QPlainTextEdit):
+class Visual_Form(QDialog, QPlainTextEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -173,5 +173,5 @@ if __name__ == '__main__':
 
     use_theme(app, "theme/darkgray.qss")
 
-    w = Visualization_Form()
+    w = Visual_Form()
     sys.exit(app.exec())
