@@ -46,7 +46,7 @@ class Vanilla(object):
         # get vanilla grad
         sel = cls if cls != -1 else pred
 
-        one_hot_output = torch.FloatTensor(1, output.size()[-1]).zero_()
+        one_hot_output = torch.zeros(1, h_x.size()[0])
         one_hot_output[0][sel] = 1
 
         output.backward(gradient=one_hot_output)
@@ -131,7 +131,7 @@ class Smooth(object):
             # Calculate gradients
             output = self.model(noisy_img)
 
-            one_hot_output = torch.FloatTensor(1, output.size()[-1]).zero_()
+            one_hot_output = torch.zeros(1, h_x.size()[0])
             one_hot_output[0][sel] = 1
 
             self.grad = None
@@ -220,14 +220,15 @@ class Guided_Backprop(object):
         h_x = F.softmax(output, dim=1).data.squeeze()
         pred = h_x.argmax(0).item()
 
+        # get guided backprop
+        sel = cls if cls != -1 else pred
+
         one_hot_output = torch.zeros(1, h_x.size()[0])
-        one_hot_output[0][pred] = 1
+        one_hot_output[0][sel] = 1
 
         # backprop
         output.backward(gradient=one_hot_output)
 
-        # get grad cam
-        sel = cls if cls != -1 else pred
         grad = self.grad.cpu().data.numpy()[0]
 
         # get color img

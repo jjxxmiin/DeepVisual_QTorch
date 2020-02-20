@@ -123,15 +123,15 @@ class GradCAM(object):
         h_x = F.softmax(output, dim=1).data.squeeze()
         pred = h_x.argmax(0).item()
 
+        sel = cls if cls != -1 else pred
+
         one_hot_output = torch.zeros(1, h_x.size()[0])
-        one_hot_output[0][pred] = 1
+        one_hot_output[0][sel] = 1
 
         # backprop
         output.backward(gradient=one_hot_output)
 
         # get grad cam
-        sel = cls if cls != -1 else pred
-
         self.grads = self.grads[::-1]
 
         for idx, name in enumerate(self.items):
