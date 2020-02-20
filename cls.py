@@ -12,9 +12,10 @@ class Class_Form(QDialog, QPlainTextEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
         label_path = "./labels/imagenet_labels.pkl"
-        
+
         self.labels = get_label(label_path)
         self.ui = uic.loadUi("./ui/Class_View.ui", self)
+        self.cls = -1
         self.initUI()
 
     def initUI(self):
@@ -45,15 +46,17 @@ class Class_Form(QDialog, QPlainTextEdit):
 
     def click_table(self):
         cur_item = self.content_table.currentItem()
-        print(self.content_table.item(cur_item.row(), 0).text())
+        self.cls = cur_item.row() - 1
+        self.close()
 
     def set_table(self):
-        self.content_table.setRowCount(len(self.labels))
+        self.content_table.setRowCount(len(self.labels) + 1)
         self.content_table.setColumnCount(1)
 
+        self.content_table.setItem(0, 0, QTableWidgetItem("Prediction"))
+
         for idx, name in self.labels.items():
-            currentRowCount = self.content_table.rowCount()
-            self.content_table.setItem(idx, 0, QTableWidgetItem(name))
+            self.content_table.setItem(idx+1, 0, QTableWidgetItem(name))
 
 
 if __name__ == '__main__':

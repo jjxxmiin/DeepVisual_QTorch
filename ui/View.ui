@@ -152,16 +152,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="cls_label">
-       <property name="text">
-        <string>Class Number</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="model_label">
        <property name="text">
@@ -179,6 +169,13 @@
          <string>resnet18</string>
         </property>
        </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="cls_btn">
+       <property name="text">
+        <string>Class Number</string>
+       </property>
       </widget>
      </item>
     </layout>

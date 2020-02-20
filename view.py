@@ -6,6 +6,7 @@ from PyQt5 import uic
 from vis.cam import CAM, GradCAM
 from vis.grad import Vanilla, Smooth, Guided_Backprop
 from util import use_theme, make_dir
+from cls import Class_Form
 
 
 class QTextEditLogger(logging.Handler):
@@ -44,6 +45,7 @@ class Visual_Form(QDialog, QPlainTextEdit):
         logging.getLogger().setLevel(logging.DEBUG)
 
         self.input_btn.clicked.connect(self.get_input_image)
+        self.cls_btn.clicked.connect(self.selc_cls)
         self.start_btn.clicked.connect(self.start)
 
     def get_input_image(self):
@@ -159,6 +161,11 @@ class Visual_Form(QDialog, QPlainTextEdit):
             self.drawing(img)
 
         return clicked_drawing
+
+    def selc_cls(self):
+        cls_form = Class_Form()
+        cls_form.exec_()
+        self.cls_box.setValue(cls_form.cls)
 
     def drawing(self, img):
         h, w, c = img.shape
