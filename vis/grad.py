@@ -123,7 +123,7 @@ class Smooth(object):
 
         for x in range(param_n):
             # progressBar
-            prog.setValue(100 / 50 * (x + 1))
+            prog.setValue(100 / param_n * (x + 1))
             # Generate noise
             noise = Variable(tensor_img.data.new(tensor_img.size()).normal_(mean, sigma ** 2))
             # Add noise to the image
